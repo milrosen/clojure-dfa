@@ -49,14 +49,6 @@
       concat)))
 
 
-(def test-tokens (cljs-dfa.interpreter.lexer/tokenize "a*b(a+b)"))
-(primary-expr test-tokens)
-(group-expr test-tokens)
-(concat-expr test-tokens)
-
-[:Concat [:Star [:Character "a"]] [:Concat [:Character "b"] 
-                                   [:Group [:Concat [:Character "a"] [:Character "b"]]]]]
-
 (defn- expression [tokens]
   (plus-expr tokens))
 
