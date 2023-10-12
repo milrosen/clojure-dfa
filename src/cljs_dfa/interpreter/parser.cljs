@@ -53,4 +53,4 @@
   (plus-expr tokens))
 
 (defn parse [tokens]
-  (expression tokens))
+  (:tree (expression tokens)))
