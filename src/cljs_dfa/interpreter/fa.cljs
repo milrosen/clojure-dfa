@@ -1,26 +1,30 @@
 (ns cljs-dfa.interpreter.fa)
 
+(defn- nnodes [n i]
+  (swap! i #(+ n %))
+  (vec (map (fn [a] [a]) (range (- @i (dec n)) (inc @i)))))
 
-(defn regex->delta
-  ([q f tree i]
+(defn- combine-delta [a b]
+  (into [] (flatten (concat a b))))
+
+(defn regex->nfa+epsilon
+  ([q0 f tree i]
    (case (tree 0)
-     :Character {#{q (tree 1)} f}
-     :Concat (let [qn (swap! i #(+ 1 %))]
-               (merge-with into (regex->delta q [qn] (tree 1) i)
-                           (regex->delta [qn] f (tree 2) i)))
-     :Plus (let [qn (swap! i #(+ 4 %))]
-             (merge-with into {#{q "ε"} [(- qn 3) (- qn 2)]}
-                         (regex->delta [(- qn 3)] [(- qn 1)] (tree 1) i)
-                         (regex->delta [(- qn 2)] [qn] (tree 2) i)
-                         {#{[(- qn 1)] "ε"} f}
-                         {#{[qn] "ε"} f}))
-     :Star (merge-with into {#{q "ε"} f}
-                       (regex->delta q q (tree 1) i))
-     :Group (regex->delta q f (tree 1) i)))
+     :Character {#{q0 (tree 1)} f}
+     :Concat (let [[q1] (nnodes 1 i)]
+               (merge-with combine-delta
+                           (regex->nfa+epsilon q0 q1 (tree 1) i)
+                           (regex->nfa+epsilon q1 f (tree 2) i)))
+     :Plus (merge-with combine-delta
+                       (regex->nfa+epsilon q0 f (tree 1) i)
+                       (regex->nfa+epsilon q0 f (tree 2) i))
+     :Star (merge-with combine-delta
+                       {#{q0 "ε"} f}
+                       (regex->nfa+epsilon q0 q0 (tree 1) i))
+     :Group (regex->nfa+epsilon q0 f (tree 1) i)))
   ([tree]
    (let [i (atom 0)]
-     (regex->delta [0] [:accept] tree i))))
+     (regex->nfa+epsilon [0] [:accept] tree i))))
 
-(def test-tree (cljs-dfa.interpreter.index/interpret "a(ab)*((ab)+b)+a"))
-((regex->delta test-tree) #{"b" [4]})
-(map println (regex->delta test-tree))
+(def tree (cljs-dfa.interpreter.index/interpret "(a+b)*ab(a+b)*"))
+(map println (regex->nfa+epsilon tree))

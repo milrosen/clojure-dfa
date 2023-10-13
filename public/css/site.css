@@ -13,3 +13,15 @@ h2 {
 *:after {
 	box-sizing: border-box;
 }
+
+div.with-canvas {
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+
+	height: 100%;
+}
+
+div.with-canvas canvas {
+	display: block;
+}

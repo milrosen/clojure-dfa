@@ -1,7 +1,9 @@
 (ns cljs-dfa.core
   (:require ["@mui/material/styles" :as m]
             ["@mui/material" :as mui :refer [Box]]
-            [cljs-dfa.components :as c]
+            [cljs-dfa.components.input :refer [input]]
+            [cljs-dfa.components.visualizedfa :refer [canvas]]
+            [cljs-dfa.db :refer [regex]]
             [reagent.dom :as d]))
 
 
@@ -25,11 +27,12 @@
      [:h1 {:style {:margin 0}} "Header"]]
     [:> Box {:sx {:grid-row "top / bottom"
                   :background "#001528"
-                  :border-radius ".2rem"}}]
+                  :border-radius ".2rem"}}
+     [canvas]]
     [:> Box {:sx {:grid-row "top / bottom"
                   :border-radius ".2rem"
                   :background "#001528"}}
-     [c/input]]]])
+     [input regex]]]])
 
 ;; -------------------------
 ;; Initialize app
