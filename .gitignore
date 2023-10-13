@@ -3,6 +3,7 @@
 /checkouts
 profiles.clj
 pom.xml
+.clj-kondo
 pom.xml.asc
 *.jar
 *.class
@@ -17,5 +18,4 @@ pom.xml.asc
 .calva
 .lsp
 .shadow-cljs
-.clj-kondo
 node_modules
