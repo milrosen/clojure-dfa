@@ -25,9 +25,8 @@
   ([tree]
    (let [i (atom 0)]
      (if-not tree
-       (regex->nfa+epsilon [0] [:accept] [:Character "ε"] i)
+       (regex->nfa+epsilon [0] [0] [:Character "ε"] i)
        (regex->nfa+epsilon [0] [:accept] tree i)))))
-
 
 (def tree (cljs-dfa.interpreter.index/interpret ""))
 (map println (regex->nfa+epsilon tree))
