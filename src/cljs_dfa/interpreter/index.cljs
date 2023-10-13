@@ -7,3 +7,5 @@
 
 (defn interpret [str]
   (-> str tokenize parse))
+
+(interpret "")

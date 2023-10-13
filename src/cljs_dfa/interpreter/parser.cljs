@@ -19,14 +19,13 @@
           (println ""))))))
 
 (defn- primary-expr [tokens]
-  (let [type (:type (first tokens))]
-    (let [primary
-          (if (= type :Character)
-            (character-expr tokens)
-            (group-expr tokens))]
-      (if (= (:type (first (:tokens primary))) :Star)
-        {:tree [:Star (:tree primary)] :tokens (rest (:tokens primary))}
-        primary))))
+  (let [type (:type (first tokens))
+        primary (if (= type :Character)
+                  (character-expr tokens)
+                  (group-expr tokens))]
+    (if (= (:type (first (:tokens primary))) :Star)
+      {:tree [:Star (:tree primary)] :tokens (rest (:tokens primary))}
+      primary)))
 
 (defn- concat-expr [tokens]
   (let [primary (primary-expr tokens)
