@@ -26,4 +26,3 @@
                {:type op}
                {:type :Character :val %}))
        explicit-concats))
-
